@@ -29,11 +29,11 @@ This is a **boilerplate template** for starting new Python (FastAPI) or Next.js 
 
 ### For Next.js Projects
 
-- **Framework:** Next.js 14+ with App Router
+- **Framework:** Next.js 15+ with App Router
 - **Language:** TypeScript (strict mode)
 - **Styling:** Tailwind CSS
 - **Validation:** Zod for runtime validation
-- **Data Fetching:** React Query for client-side, Server Components for server-side
+- **Data Fetching:** Server Actions (preferred for mutations), Server Components for data, React Query for client-side
 - **Testing:** Jest + React Testing Library
 
 📖 **See detailed guidelines:** `.claude/docs/nextjs-best-practices.md`
@@ -289,11 +289,33 @@ docker buildx build --platform linux/amd64,linux/arm64 -t my-app .
 
 ---
 
+## Documentation Resources
+
+**When you need to look up framework documentation:**
+
+### Next.js Documentation
+1. **Primary:** Use **context7 MCP server** for latest Next.js 15+ documentation
+   - Provides official, up-to-date Next.js docs
+   - Always check here first for Next.js questions
+
+2. **Fallback:** Use **WebSearch** if context7 MCP is unavailable
+   - Search: "Next.js 15 [feature] 2025"
+   - Verify from official sources only
+
+### Python/FastAPI Documentation
+- Use **WebSearch** for FastAPI, pytest, Pydantic docs
+- Prioritize official documentation over blog posts
+
+---
+
 ## Notes for Claude
 
 - This is a **template repository** - customize for each new project
 - Always prefer existing conventions documented in `.claude/docs/`
+- **For Next.js:** Use Server Actions for mutations, prefer Server Components
+- **For Python:** Use FastAPI with Pydantic validation
 - Run tests before committing
 - Use type hints/types extensively
 - Follow the CI/CD workflow for deployments
 - Security scanning is automatic - review results in GitHub Security tab
+- **Check context7 MCP for Next.js docs first**, fallback to WebSearch

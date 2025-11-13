@@ -2,10 +2,15 @@
 
 Quick reference for Next.js development standards in this boilerplate.
 
+## Version Requirement
+
+**Use Next.js 15 or higher** for the latest features, improvements, and React 19 support.
+
 ## Setup
 
 **Preferred Stack:**
 ```bash
+# Ensure Next.js 15+
 npx create-next-app@latest --typescript --tailwind --app --src-dir
 
 # Install essentials
@@ -155,6 +160,135 @@ function useUser(id: string) {
   })
 }
 ```
+
+---
+
+## Server Actions (Preferred for Mutations)
+
+**Server Actions** are async functions that run on the server. Use them instead of API routes when possible for better performance and simpler code.
+
+**Basic Server Action:**
+```typescript
+// app/actions.ts
+'use server'
+
+import { revalidatePath } from 'next/cache'
+import { z } from 'zod'
+
+const createUserSchema = z.object({
+  email: z.string().email(),
+  name: z.string().min(2),
+})
+
+export async function createUser(formData: FormData) {
+  // Validate input
+  const validatedFields = createUserSchema.safeParse({
+    email: formData.get('email'),
+    name: formData.get('name'),
+  })
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    }
+  }
+
+  // Create user
+  try {
+    const user = await db.user.create({
+      data: validatedFields.data,
+    })
+
+    revalidatePath('/users')
+    return { success: true, user }
+  } catch (error) {
+    return { error: 'Failed to create user' }
+  }
+}
+```
+
+**Using Server Actions in Forms:**
+```typescript
+// app/users/new/page.tsx
+import { createUser } from '@/app/actions'
+
+export default function NewUserPage() {
+  return (
+    <form action={createUser}>
+      <input name="email" type="email" required />
+      <input name="name" type="text" required />
+      <button type="submit">Create User</button>
+    </form>
+  )
+}
+```
+
+**Server Actions with useFormState (for client components):**
+```typescript
+// components/user-form.tsx
+'use client'
+
+import { useFormState, useFormStatus } from 'react-dom'
+import { createUser } from '@/app/actions'
+
+function SubmitButton() {
+  const { pending } = useFormStatus()
+  return (
+    <button type="submit" disabled={pending}>
+      {pending ? 'Creating...' : 'Create User'}
+    </button>
+  )
+}
+
+export function UserForm() {
+  const [state, formAction] = useFormState(createUser, null)
+
+  return (
+    <form action={formAction}>
+      <input name="email" type="email" required />
+      {state?.errors?.email && <p>{state.errors.email}</p>}
+
+      <input name="name" type="text" required />
+      {state?.errors?.name && <p>{state.errors.name}</p>}
+
+      <SubmitButton />
+      {state?.error && <p>{state.error}</p>}
+    </form>
+  )
+}
+```
+
+**Server Actions with useTransition (programmatic calls):**
+```typescript
+'use client'
+
+import { useTransition } from 'react'
+import { deleteUser } from '@/app/actions'
+
+export function DeleteButton({ userId }: { userId: string }) {
+  const [isPending, startTransition] = useTransition()
+
+  const handleDelete = () => {
+    startTransition(async () => {
+      await deleteUser(userId)
+    })
+  }
+
+  return (
+    <button onClick={handleDelete} disabled={isPending}>
+      {isPending ? 'Deleting...' : 'Delete'}
+    </button>
+  )
+}
+```
+
+**Server Action Best Practices:**
+- Use `'use server'` directive at the top of the file or function
+- Always validate input with Zod
+- Use `revalidatePath()` or `revalidateTag()` to update cached data
+- Return typed responses for better error handling
+- Prefer Server Actions over API routes for mutations
+- Use `redirect()` for navigation after successful mutations
 
 ---
 
@@ -354,9 +488,27 @@ src/
 
 ---
 
+## Documentation Resources
+
+**When you need Next.js documentation:**
+
+1. **Primary:** Use the **context7 MCP server** for the latest Next.js 15+ documentation
+   - Provides up-to-date, official Next.js docs
+   - Includes latest features and API changes
+
+2. **Fallback:** Use **WebSearch** if context7 MCP is not available
+   - Search for "Next.js 15 [feature name] 2025"
+   - Verify information is from official Next.js docs
+
+**Always prioritize official documentation over third-party sources.**
+
+---
+
 ## Quick Checklist
 
+- [ ] Use Next.js 15 or higher
 - [ ] Use App Router with Server Components by default
+- [ ] Prefer Server Actions for mutations over API routes
 - [ ] TypeScript strict mode enabled
 - [ ] Zod for all runtime validation
 - [ ] Next.js Image for all images
