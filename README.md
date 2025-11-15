@@ -1,6 +1,6 @@
 # Project Boilerplate with CI/CD
 
-A production-ready boilerplate template with GitHub Actions CI/CD, automated versioning, multi-platform Docker builds, and security scanning.
+A boilerplate template with GitHub Actions CI/CD, automated versioning, multi-platform Docker builds, claude commands,agents etc and security scanning.
 
 > 📖 **New to this boilerplate?** Start with the [Quick Start Guide](docs/setup/QUICK_START.md) or the [Documentation Index](docs/INDEX.md).
 

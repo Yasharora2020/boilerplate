@@ -18,11 +18,11 @@ This is a **boilerplate template** for starting new Python (FastAPI) or Next.js 
 
 ### For Python Projects
 
-📖 **See all guidelines:** `.claude/docs/python-best-practices.md`
+📖 **See all guidelines:** `.docs/python-best-practices.md`
 
 ### For Next.js Projects
 
-📖 **See all guidelines:** `.claude/docs/nextjs-best-practices.md`
+📖 **See all guidelines:** `.docs/nextjs-best-practices.md`
 
 ---
 
@@ -69,7 +69,7 @@ This is a **boilerplate template** for starting new Python (FastAPI) or Next.js 
 
 ## CI/CD Pipeline
 
-**Location:** `.github/workflows/`
+**Location:** `.github/workflows/` *** currently Disabled ***
 
 ### CI Pipeline (`ci.yml`)
 
@@ -101,7 +101,7 @@ git tag v1.0.0 -m "Release 1.0.0: Description"
 git push origin v1.0.0
 ```
 
-📖 **CI/CD Setup:** `docs/GITHUB_ACTIONS_SETUP.md`
+📖 **CI/CD Setup:** `.docs/GITHUB_ACTIONS_SETUP.md`
 📖 **Versioning:** `docs/VERSIONING_GUIDE.md`
 
 ---
@@ -169,7 +169,7 @@ mypy app/
 
 **Next.js:**
 ```bash
-npm test
-npm run lint
-npm run type-check
+pnpm test
+pnpm run lint
+pnpm run type-check
 ```
