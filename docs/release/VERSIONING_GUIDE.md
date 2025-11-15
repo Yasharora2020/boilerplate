@@ -1,14 +1,6 @@
-# Versioning Guide
+# Versioning and Release Guide
 
-This guide explains how to version your application using semantic versioning and Git tags.
-
-## Table of Contents
-- [Quick Start](#quick-start)
-- [Understanding Versions](#understanding-versions)
-- [Creating a Release](#creating-a-release)
-- [Version Decision Tree](#version-decision-tree)
-- [Docker Image Tags](#docker-image-tags)
-- [Common Scenarios](#common-scenarios)
+How to version your application using semantic versioning and Git tags, and how to create releases.
 
 ## Quick Start
 
@@ -130,7 +122,7 @@ ghcr.io/your-username/your-repo:develop   # Latest from develop
 ghcr.io/your-username/your-repo:develop-sha-abc123f  # Specific commit
 ```
 
-## Common Scenarios
+## Common Release Scenarios
 
 ### Scenario 1: First Release
 
@@ -263,7 +255,7 @@ git push origin v1.1.0
    git tag -a v1.0.0 -m "Release 1.0.0: Add user authentication and profiles"
    ```
 
-3. **Keep a CHANGELOG.md** (optional but recommended)
+3. **Keep a CHANGELOG.md** (see [Changelog Guide](./CHANGELOG_GUIDE.md))
    - Document what changed in each version
    - Makes it easier for users to understand updates
 
@@ -294,6 +286,40 @@ git describe --tags --abbrev=0
 git show v1.0.0
 ```
 
+## Workflow Integration
+
+When you create a release tag, the automated CI/CD workflow:
+
+1. **Detects the tag** (e.g., `v1.0.0`)
+2. **Builds the application** for multiple platforms
+3. **Runs security scans** (Trivy)
+4. **Pushes to GHCR** with version tags
+5. **Creates GitHub Release** with:
+   - Automated changelog
+   - Docker pull commands
+   - Security scan results
+   - SBOM (Software Bill of Materials)
+
+See [CI/CD Guide](../operate/CI_CD_GUIDE.md) for more details.
+
+## Managing Versions in Code
+
+Some projects want to keep version in code (package.json, pyproject.toml, etc.). To automate this:
+
+1. Create script that updates version file
+2. Run during release workflow
+3. Commit back to main (optional)
+
+Example:
+```bash
+# In release script
+echo "__version__ = '1.0.0'" > app/__version__.py
+```
+
+## Changelog Management
+
+See [Changelog Guide](./CHANGELOG_GUIDE.md) for detailed instructions on maintaining a changelog alongside your releases.
+
 ## Troubleshooting
 
 ### Tag not triggering workflow
@@ -311,8 +337,10 @@ git show v1.0.0
 - Ensure `GITHUB_TOKEN` has package write permissions
 - Wait a few minutes for image to appear
 
-## Need Help?
+See [Troubleshooting Guide](../operate/TROUBLESHOOTING.md) for more issues and solutions.
 
-- Check GitHub Actions logs: Repository → Actions tab
-- View releases: Repository → Releases tab
-- View images: Repository → Packages tab
+## Resources
+
+- [Semantic Versioning](https://semver.org/)
+- [Conventional Commits](https://www.conventionalcommits.org/)
+- [Keep a Changelog](https://keepachangelog.com/)

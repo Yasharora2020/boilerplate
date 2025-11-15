@@ -1,14 +1,6 @@
-# GitHub Actions CI/CD Setup Guide
+# CI/CD Setup and Usage Guide
 
-This guide explains how to set up and use the GitHub Actions workflows in this boilerplate.
-
-## Table of Contents
-- [Overview](#overview)
-- [Initial Setup](#initial-setup)
-- [Workflows Explained](#workflows-explained)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Troubleshooting](#troubleshooting)
+Complete guide to setting up and using the GitHub Actions CI/CD workflows in this boilerplate.
 
 ## Overview
 
@@ -212,7 +204,7 @@ git commit -m "docs: update README"
 
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
-## Usage
+## Usage Patterns
 
 ### Development Workflow
 
@@ -347,118 +339,6 @@ services:
    - SBOM download
    - Available tags
 
-## Troubleshooting
-
-### Workflow Not Triggering
-
-**Problem:** Pushed to branch but CI didn't run
-
-**Solutions:**
-- Check Actions tab → ensure workflows are enabled
-- Verify branch name matches workflow trigger (`main`, `develop`)
-- Check if workflows are disabled in repository settings
-
----
-
-### Authentication Error Pushing to GHCR
-
-**Problem:** `ERROR: failed to push: denied`
-
-**Solutions:**
-1. Check workflow permissions:
-   - Settings → Actions → General
-   - Enable "Read and write permissions"
-
-2. Manually create token (if needed):
-   - Settings → Developer settings → Personal access tokens
-   - Create token with `write:packages` scope
-   - Add as repository secret named `GHCR_TOKEN`
-   - Update workflow to use secret
-
----
-
-### Build Failing
-
-**Problem:** Docker build fails in workflow
-
-**Solutions:**
-1. Test locally:
-```bash
-docker build -t test .
-```
-
-2. Check Dockerfile syntax
-3. Verify all required files exist
-4. Check workflow logs for specific error
-
----
-
-### Trivy Scan Blocking Release
-
-**Problem:** Security scan finds vulnerabilities
-
-**Solutions:**
-1. Update dependencies:
-   - Python: Update `requirements.txt`
-   - Node: Run `npm audit fix`
-
-2. Review vulnerabilities:
-   - Check Security tab
-   - Assess severity
-   - Update affected packages
-
-3. Temporarily allow (not recommended):
-   - Change `exit-code: '0'` in workflow
-
----
-
-### Tag Not Creating Release
-
-**Problem:** Pushed tag but release workflow didn't run
-
-**Solutions:**
-- Verify tag format: Must be `v*.*.*` (e.g., `v1.0.0`)
-- Check tag was pushed: `git push origin v1.0.0`
-- Check Actions tab for errors
-- Ensure release.yml exists and is valid
-
----
-
-### Image Not Pulling
-
-**Problem:** `docker pull` fails with auth error
-
-**Solutions:**
-1. Login to GHCR:
-```bash
-echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
-```
-
-2. Make package public:
-   - Profile → Packages → Select package
-   - Settings → Change visibility
-
-3. Use correct image name:
-```bash
-ghcr.io/username/repo:tag  # All lowercase
-```
-
----
-
-### Multi-platform Build Slow
-
-**Problem:** Release takes too long
-
-**Solutions:**
-- Use Docker layer caching (already enabled)
-- Reduce number of platforms if not needed
-- Optimize Dockerfile:
-  - Minimize layers
-  - Use smaller base images
-  - Order commands by change frequency
-
----
-
 ## Advanced Configuration
 
 ### Adding Secrets
@@ -555,14 +435,6 @@ Then: Actions tab → Select workflow → "Run workflow"
    - Test images before tagging
    - Review logs
 
-## Next Steps
-
-1. ✅ Complete initial setup above
-2. ✅ Push to trigger first CI run
-3. ✅ Create first release tag
-4. 📖 Read [Versioning Guide](./VERSIONING_GUIDE.md)
-5. 🚀 Start developing!
-
 ## Resources
 
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
@@ -570,3 +442,7 @@ Then: Actions tab → Select workflow → "Run workflow"
 - [Trivy Scanner](https://github.com/aquasecurity/trivy)
 - [Semantic Versioning](https://semver.org/)
 - [Conventional Commits](https://www.conventionalcommits.org/)
+
+## Troubleshooting
+
+See [Troubleshooting Guide](./TROUBLESHOOTING.md) for common issues and solutions.

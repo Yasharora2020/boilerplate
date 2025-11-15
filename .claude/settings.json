@@ -1,0 +1,62 @@
+{
+  "cleanupPeriodDays": 3,
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "allow": [
+      "*",
+      "Bash(cat:*)",
+      "Bash(test -f:*)",
+      "Bash(test:*)"
+    ],
+    "deny": [
+      "Bash(rm:*)"
+    ],
+    "defaultMode": "bypassPermissions"
+  },
+  "model": "claude-haiku-4-5-20251001",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Edit|Write|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/protect-env-files.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/log-bash-commands.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/pomodoro-control.sh start",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/pomodoro-timer.sh",
+    "padding": 2
+  },
+  "companyAnnouncements": [
+    "The only way to do great work is to love what you do. Keep pushing forward!",
+    "Remember to take breaks and stay hydrated while coding. Your health matters!",
+    "Focus on progress, not perfection. Every line of code you write makes you better."
+  ]
+}
